@@ -1,0 +1,82 @@
+pipeline {
+  options {
+    ansiColor('xterm')
+    buildDiscarder(logRotator(numToKeepStr: '10'))
+  }
+
+  agent {
+    node any
+  }
+
+  parameters {
+    booleanParam(
+      name: 'create_ami',
+      defaultValue: false,
+      description: 'Create AMI for all servers.'
+    )
+
+    string(
+			name: 'Version',
+			defaultValue: "",
+			description: 'Enter AMI Version else latest created AMI Version will be used.'
+		)
+
+		booleanParam(
+			name: 'planInfrastructure',
+			defaultValue: true,
+			description: 'Check what is going to change in Infrastructure.'
+		)
+
+		booleanParam(
+			name: 'createInfrastructure',
+			defaultValue: false,
+			description: 'Create Infrastructure (You need to select plan checkbox for this. MANDATORY).'
+		)
+
+		booleanParam(
+			name: 'destroyInfrastructure',
+			defaultValue: false,
+			description: 'Destroy Infrastructure.'
+		)
+	}
+
+	stages {
+		stage('Prepare and Checkout') {
+			steps {
+				cleanWs()
+				checkout scm
+                sh "chmod +x bin/*"
+			}
+		}
+
+		stage('Create Server AMIs') {
+			when {
+				expression { return params.create_ami }
+			}
+			steps {
+			  sh "bin/create_baked_ami.sh | tee -a /tmp/baked_ami.output"
+			}
+		}
+
+    stage('Check Plan for Infrastructure') {
+      when {
+        expression { return params.planInfrastructure }
+      }
+      environment {
+				new_ami_version = sh (
+					script: "tail -1 /tmp/baked_ami.output | sed 's/ //g'",
+					returnStdout: true
+				).trim()
+			}
+      steps {
+        script {
+          sh "if [ ! -d infra-code/plan ]; then mkdir infra-code/plan; fi"
+          if ( "${params.Version}" == "") {
+            "${params.Version}" = "${env.new_ami_version}"
+          }
+
+          sh "cd challenge && terraform init && terraform plan -out=plan/terraform_plan.out -var \"${params.Version}\" "
+        }
+      }
+	}
+}
