@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="48e519f9-b5e0-4cc2-8d85-2a0727cca3b6" name="Default Changelist" comment="" />
+    <list default="true" id="48e519f9-b5e0-4cc2-8d85-2a0727cca3b6" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/DevOps/terraform/provider.tf" beforeDir="false" afterPath="$PROJECT_DIR$/DevOps/terraform/provider.tf" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -22,8 +24,8 @@
               <option name="branches">
                 <list>
                   <RecentBranch>
-                    <option name="branchName" value="master" />
-                    <option name="lastUsedInstant" value="1659707657" />
+                    <option name="branchName" value="initial" />
+                    <option name="lastUsedInstant" value="1659707686" />
                   </RecentBranch>
                 </list>
               </option>
@@ -81,7 +83,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1659696495290</updated>
-      <workItem from="1659696498887" duration="2880000" />
+      <workItem from="1659696498887" duration="3562000" />
     </task>
     <servers />
   </component>
